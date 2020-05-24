@@ -1,54 +1,37 @@
 package com.infatuation.logsplorer.controller;
 
+import com.infatuation.logsplorer.service.LogService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Socket;
+import java.util.List;
 
 @RestController
 public class LogController {
 
-	@RequestMapping("/socket")
-	public String initLog() throws IOException {
-		String result = "Fetch Log Failed";
-		String LOGGERATOR_URL = "127.0.0.1";
-		int PORT = 8080;
-		System.out.println("Loading contents of URL: " + LOGGERATOR_URL + PORT);
+	@Autowired
+	LogService logService;
 
-		try {
-			// Connect to the server
-			Socket socket = new Socket(LOGGERATOR_URL, PORT);
-			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			StringBuilder builder = new StringBuilder();
-
-			// Read data from the server until we finish reading the document
-			String line = in.readLine();
-			while (line != null) {
-				builder.append(line);
-				line = in.readLine();
-			}
-			result = builder.toString();
-
-			// Close our streams
-			in.close();
-			socket.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return result;
-	}
-
-	@GetMapping
-	public String getLogs(
+	@GetMapping("/logs")
+	public List<String> getLogs(
 			@RequestParam(required = false) String code,
 			@RequestParam(required = false) String method,
 			@RequestParam(required = false) String user){
-		return "Hello";
+		long start = System.currentTimeMillis();
+		List<String> ret = logService.searchLog(code, method, user);
+		long end = System.currentTimeMillis();
+		System.out.println(String.format("================ Search %d logs in %d msec", ret.size(), end - start));
+//		print(ret);
+		return ret;
+	}
+
+	private void print(List<String> list){
+
+		for(String s : list){
+			System.out.println(s);
+		}
+		System.out.println("Total: " + list.size());
 	}
 }

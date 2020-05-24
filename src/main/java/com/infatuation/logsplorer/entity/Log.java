@@ -35,7 +35,7 @@ public class Log {
 	private String protocol;
 
 	@Column(name = "STATUS")
-	private int status;
+	public int status;
 
 	@Column(name = "BYTES")
 	private int bytes;

@@ -2,6 +2,7 @@ package com.infatuation.logsplorer.service;
 
 import com.infatuation.logsplorer.entity.Log;
 import com.infatuation.logsplorer.repository.LogRepository;
+import com.infatuation.logsplorer.repository.LogRepositoryCustom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +10,7 @@ import java.util.Date;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,6 +19,13 @@ public class LogService {
 
 	@Autowired
 	LogRepository repository;
+
+	@Autowired
+	LogRepositoryCustom logRepositoryCustom;
+
+	public List<String> searchLog(String code, String method, String user){
+		return logRepositoryCustom.searchLogsWithCriteria(code, method, user);
+	}
 
 	public void persistLine(String line) {
 		try{
@@ -31,8 +40,6 @@ public class LogService {
 	}
 
 	public Log parse(String line) throws ParseException, IllegalStateException {
-		System.out.println(line);
-		//  "([^"].)" "([^"].)"   -- Referrer and Browser info
 		final String regex = "^(\\S+) (\\S+) (\\S+) \\[(.+)\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\S+)";
 		final SimpleDateFormat formatter = new SimpleDateFormat("dd/MMM/yyyy hh:mm:ss Z");
 		final Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
