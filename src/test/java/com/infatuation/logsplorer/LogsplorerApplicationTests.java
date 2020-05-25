@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.text.ParseException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 class LogsplorerApplicationTests {
 	
@@ -42,16 +43,9 @@ class LogsplorerApplicationTests {
 
 		String rawLog = "86.176.116.151 - williamsims [01/Jul/2000 08:46:04 +0000] \"GET /followers/77 HTTP/1.0\" 200 266 -";
 
-		Log log = logService.parse(rawLog, LOG_REGEX);
-		assertThat(log.getRemoteHost()).isEqualTo(null);
-		assertThat(log.getRfc931()).isEqualTo(null);
-		assertThat(log.getAuthUser()).isEqualTo(null);
-		assertThat(log.getDate()).isEqualTo(null);
-		assertThat(log.getMethod()).isEqualTo(null);
-		assertThat(log.getUriPath()).isEqualTo(null);
-		assertThat(log.getProtocol()).isEqualTo(null);
-		assertThat(log.getStatus()).isEqualTo(null);
-		assertThat(log.getBytes()).isEqualTo(null);
-		assertThat(log.getRaw()).isEqualTo(rawLog);
+		assertThatExceptionOfType(IllegalStateException.class)
+				.isThrownBy(() -> {
+					Log log = logService.parse(rawLog, LOG_REGEX);
+				});
 	}
 }
