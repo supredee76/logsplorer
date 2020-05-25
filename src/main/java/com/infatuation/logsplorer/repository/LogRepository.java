@@ -8,4 +8,8 @@ import java.util.List;
 
 @Repository
 public interface LogRepository extends CrudRepository<Log, Long> {
+    /**
+     * This is Spring Data JPA interface for accessing data stored in Relational database.
+     * It provide basic CRUD operation.
+     */
 }

@@ -5,6 +5,10 @@
 This program help explore access logs generated from Loggerator. 
 * Once Logsplorer running, it will keep pinging Loggerator running at localhost:8080. 
 * After connection estabished, Logsplorer will start to ingest logs into the running in-memory H2 database. The process involve read, parse, save and index the logs.
+* You can access [H2 Console](http://localhost:8443/h2-console) to view and query logs data.
+    * __JDBC URL:__ jdbc:h2:mem:myDb
+    * __User Name:__ sa
+    * __Password:__ [leave blank]
 * The logs are pased according to specification on [The Common Apache Access Log Format](https://www.w3.org/Daemon/User/Config/Logging.html)
 * Once the ingestion started, you can start querying the logs, however, the result will be incompleted.
 * When ingestion completed, connection to Loggerator will terminate and Logsplorer will never connect to it again. This is by design as per the requirements in [INSTRUCTION.md](https://github.com/supredee76/logsplorer/blob/master/INSTRUCTIONS.md).

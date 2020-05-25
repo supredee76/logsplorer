@@ -18,6 +18,9 @@ import java.util.regex.Pattern;
 public class LogService {
 	final String LOG_REGEX = "^(\\S+) (\\S+) (\\S+) \\[(.+)\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\S+)";
 	final String TIMESTAMP_FORMAT = "dd/MMM/yyyy hh:mm:ss Z";
+
+	Logger logger = LoggerFactory.getLogger(LogService.class);
+
 	@Autowired
 	LogRepository repository;
 
@@ -28,22 +31,31 @@ public class LogService {
 		return logRepositoryCustom.searchLogsWithCriteria(code, method, user);
 	}
 
+	/**
+	 * This function parse and persist log file to database.
+	 * It save raw if parse failed.
+	 */
 	public void persistLine(String line) {
 		try{
-			Log log = parse(line);
+			Log log = parse(line, LOG_REGEX);
 			repository.save(log);
 		} catch( Exception e ){
-			System.out.println(String.format("Error parsing %s. Save raw", line));
+			logger.error(String.format("Error parsing %s. Save raw", line), e);
 			Log log = new Log();
 			log.setRaw(line);
 			repository.save(log);
 		}
 	}
 
-	public Log parse(String line) throws ParseException, IllegalStateException {
+	/**
+	 * Parse log file using regular expression
+	 * @param line - Raw log string
+	 * @param regex - Regular expression string
+	 * @return - Log entity of the log
+	 */
+	public Log parse(String line, String regex) throws ParseException, IllegalStateException {
 
-		final SimpleDateFormat formatter = new SimpleDateFormat(TIMESTAMP_FORMAT);
-		final Pattern pattern = Pattern.compile(LOG_REGEX, Pattern.MULTILINE);
+		final Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
 		final Matcher matcher = pattern.matcher(line);
 		matcher.matches();
 
@@ -72,6 +84,9 @@ public class LogService {
 		return log;
 	}
 
+	/**
+	 * Parse string timestamp to java Timestamp
+	 */
 	public Timestamp parseDate(String strDate) throws ParseException {
 		final SimpleDateFormat formatter = new SimpleDateFormat(TIMESTAMP_FORMAT);
 		Date date = formatter.parse(strDate);

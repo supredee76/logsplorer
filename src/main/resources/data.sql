@@ -1,3 +1,4 @@
+-- This file will run the moment H2 come online at Spring boot start up.
 CREATE INDEX USER_IDX ON LOG(AUTH_USER);
 CREATE INDEX STATUS_IDX ON LOG(STATUS);
 CREATE INDEX METHOD_IDX ON LOG(METHOD);

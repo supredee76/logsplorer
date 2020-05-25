@@ -12,10 +12,20 @@ import java.util.List;
 
 @Repository
 public class LogRepositoryCustom {
-
+	
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	/**
+	 * Custom repository class for log searching. We are taking advantage of CriteriaBuilder
+	 * and Predicate to do conditional query.
+	 * Query param search is case insensitive and optional.
+	 * If no search param is given then we return the entire log collection.
+	 * @param code - Query for Status Code. eg, 200, 500
+	 * @param method - Query for HTTP Method. eg, Get, GET, PosT
+	 * @param user - Query for Auth User
+	 * @return - Return subset of log collection based on query param given, sorted by Date field in descending order. Return all collection if no query param given. 
+	 */
 	public List<String> searchLogsWithCriteria(String code, String method, String user){
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<String> query = builder.createQuery(String.class);
@@ -44,7 +54,6 @@ public class LogRepositoryCustom {
 				.where(builder.and(pArr))
 				.orderBy(builder.desc(log.get("date")));
 
-		System.out.println(String.format("============== code:%s , method:%s , user:%s", code, method, user));
 		return entityManager.createQuery(query).getResultList();
 	}
 }

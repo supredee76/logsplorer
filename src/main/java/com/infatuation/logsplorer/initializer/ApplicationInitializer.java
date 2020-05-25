@@ -13,16 +13,22 @@ import org.springframework.stereotype.Component;
 public class ApplicationInitializer
 		implements ApplicationListener<ApplicationReadyEvent> {
 
+	Logger logger = LoggerFactory.getLogger(ApplicationInitializer.class);
+
 	@Autowired
 	private TaskExecutor taskExecutor;
+	
 	@Autowired
 	private ApplicationContext applicationContext;
 
+	/**
+	 * This class listening to application start up event and spin data loader on a separate thread
+	 */
 	@Override
 	public void onApplicationEvent(ApplicationReadyEvent event) {
-		System.out.println("=============================  initializer ========================");
+		logger.info("=============================  initializer =============================");
 
-		// start the thread
+		// start data loader on a separate thread
 		LogLoaderTask logLoaderTask = applicationContext.getBean(LogLoaderTask.class);
 		taskExecutor.execute(logLoaderTask);
 	}
