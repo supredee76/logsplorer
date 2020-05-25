@@ -17,7 +17,7 @@ This program help explore access logs generated from Loggerator.
 You need Java setup on your machine. Read this [guide](https://www.wikihow.com/Run-a-.Jar-Java-File) for more detail.
 
 #### Running the program
-1. Fromt your terminal.
+1. From your terminal.
 2. Navigate to logsplorer-[VERSION].jar file attached in the email and from the project root directory.
 3. Run command
 ```bash

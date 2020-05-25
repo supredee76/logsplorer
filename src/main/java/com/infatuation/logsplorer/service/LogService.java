@@ -3,6 +3,8 @@ package com.infatuation.logsplorer.service;
 import com.infatuation.logsplorer.entity.Log;
 import com.infatuation.logsplorer.repository.LogRepository;
 import com.infatuation.logsplorer.repository.LogRepositoryCustom;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

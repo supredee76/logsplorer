@@ -35,7 +35,7 @@ public class LogRepositoryCustom {
 
 		if(!StringUtils.isEmpty(code)){
 			Predicate codePredicate = builder.equal(
-					builder.lower(log.get("status")), code.toLowerCase());
+					builder.lower(log.get("status")), Integer.parseInt(code.toLowerCase()));
 			predicateList.add(codePredicate);
 		}
 		if(!StringUtils.isEmpty(method)){

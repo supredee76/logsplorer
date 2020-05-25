@@ -1,6 +1,8 @@
 package com.infatuation.logsplorer.controller;
 
 import com.infatuation.logsplorer.service.LogService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +35,7 @@ public class LogController {
 		long start = System.currentTimeMillis();
 		List<String> logs = logService.searchLog(code, method, user);
 		long end = System.currentTimeMillis();
-		logger.info("================ Search %d logs in %d msec ", logs.size(), end - start));
+		logger.info(String.format("================ Search %d logs in %d msec ", logs.size(), end - start));
 		return ResponseEntity.ok(logs);
 	}
 }
