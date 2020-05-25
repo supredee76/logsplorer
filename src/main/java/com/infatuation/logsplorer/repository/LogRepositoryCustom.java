@@ -24,21 +24,26 @@ public class LogRepositoryCustom {
 		List<Predicate> predicateList = new ArrayList<>();
 
 		if(!StringUtils.isEmpty(code)){
-			Predicate codePredicate = builder.equal(log.get("status"), code);
+			Predicate codePredicate = builder.equal(
+					builder.lower(log.get("status")), code.toLowerCase());
 			predicateList.add(codePredicate);
 		}
 		if(!StringUtils.isEmpty(method)){
-			Predicate methodPredicate = builder.equal(log.get("method"), method);
+			Predicate methodPredicate = builder.equal(
+					builder.lower(log.get("method")), method.toLowerCase());
 			predicateList.add(methodPredicate);
 		}
 		if(!StringUtils.isEmpty(user)){
-			Predicate userPredicate = builder.equal(log.get("authUser"), user);
+			Predicate userPredicate = builder.equal(
+					builder.lower(log.get("authUser")), user.toLowerCase());
 			predicateList.add(userPredicate);
 		}
 
 		Predicate[] pArr = predicateList.toArray(new Predicate[predicateList.size()]);
 		query.select(log.<String>get("raw"))
-				.where(builder.and(pArr));
+				.where(builder.and(pArr))
+				.orderBy(builder.desc(log.get("date")));
+
 		System.out.println(String.format("============== code:%s , method:%s , user:%s", code, method, user));
 		return entityManager.createQuery(query).getResultList();
 	}

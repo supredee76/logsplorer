@@ -16,7 +16,8 @@ import java.util.regex.Pattern;
 
 @Service
 public class LogService {
-
+	final String LOG_REGEX = "^(\\S+) (\\S+) (\\S+) \\[(.+)\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\S+)";
+	final String TIMESTAMP_FORMAT = "dd/MMM/yyyy hh:mm:ss Z";
 	@Autowired
 	LogRepository repository;
 
@@ -40,9 +41,9 @@ public class LogService {
 	}
 
 	public Log parse(String line) throws ParseException, IllegalStateException {
-		final String regex = "^(\\S+) (\\S+) (\\S+) \\[(.+)\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\S+)";
-		final SimpleDateFormat formatter = new SimpleDateFormat("dd/MMM/yyyy hh:mm:ss Z");
-		final Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
+
+		final SimpleDateFormat formatter = new SimpleDateFormat(TIMESTAMP_FORMAT);
+		final Pattern pattern = Pattern.compile(LOG_REGEX, Pattern.MULTILINE);
 		final Matcher matcher = pattern.matcher(line);
 		matcher.matches();
 
@@ -50,8 +51,7 @@ public class LogService {
 		String host = matcher.group(1);
 		String rfc931 = matcher.group(2);
 		String user = matcher.group(3);
-		Date date = formatter.parse(matcher.group(4));
-		Timestamp time = new Timestamp(date.getTime());
+		Timestamp time = parseDate(matcher.group(4));
 		String method = matcher.group(5);
 		String uriPath = matcher.group(6);
 		String protocol = matcher.group(7);
@@ -70,5 +70,12 @@ public class LogService {
 		log.setBytes(bytes);
 
 		return log;
+	}
+
+	public Timestamp parseDate(String strDate) throws ParseException {
+		final SimpleDateFormat formatter = new SimpleDateFormat(TIMESTAMP_FORMAT);
+		Date date = formatter.parse(strDate);
+		Timestamp time = new Timestamp(date.getTime());
+		return time;
 	}
 }

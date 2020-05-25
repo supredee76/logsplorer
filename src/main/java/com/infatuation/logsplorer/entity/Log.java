@@ -22,7 +22,7 @@ public class Log {
 	@Column(name = "AUTH_USER")
 	private String authUser;
 
-	@Column(name = "DATE")
+	@Column(name = "ACCESS_DATE")
 	private Timestamp date;
 
 	@Column(name = "METHOD")
